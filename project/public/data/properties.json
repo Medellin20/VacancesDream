@@ -1,0 +1,170 @@
+[
+  {
+    "id": 1,
+    "titre": "Villa Moderne avec Vue Mer",
+    "type": "Maison",
+    "localisation": "Nice, Côte d'Azur",
+    "prix": 350,
+    "description": "Magnifique villa contemporaine située sur les hauteurs de Nice, offrant une vue imprenable sur la Méditerranée. Cette propriété exceptionnelle combine luxe, confort et design moderne pour des vacances inoubliables. Parfaite pour les familles ou groupes d'amis cherchant un havre de paix avec toutes les commodités.",
+    "caracteristiques": {
+      "chambres": 4,
+      "sallesDeBain": 3,
+      "superficie": 180,
+      "equipements": ["Wi-Fi", "Climatisation", "Piscine privée", "Parking", "Jardin", "Terrasse", "BBQ", "Vue mer", "Cuisine équipée", "Lave-linge"]
+    },
+    "images": [
+      "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2635038/pexels-photo-2635038.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2121121/pexels-photo-2121121.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2082087/pexels-photo-2082087.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2034335/pexels-photo-2034335.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1571463/pexels-photo-1571463.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1648771/pexels-photo-1648771.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2468773/pexels-photo-2468773.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2581922/pexels-photo-2581922.jpeg?auto=compress&cs=tinysrgb&w=1600"
+    ]
+  },
+  {
+    "id": 2,
+    "titre": "Appartement Cosy Centre-Ville",
+    "type": "Appartement",
+    "localisation": "Paris, Marais",
+    "prix": 180,
+    "description": "Charmant appartement parisien au cœur du quartier du Marais. Idéalement situé à proximité des meilleurs restaurants, boutiques et sites touristiques. Cet espace moderne et élégant est parfait pour découvrir l'authenticité parisienne tout en profitant du confort d'un logement entièrement rénové.",
+    "caracteristiques": {
+      "chambres": 2,
+      "sallesDeBain": 1,
+      "superficie": 65,
+      "equipements": ["Wi-Fi", "Climatisation", "Chauffage", "Cuisine équipée", "Lave-linge", "Ascenseur", "TV", "Balcon"]
+    },
+    "images": [
+      "https://images.pexels.com/photos/1457847/pexels-photo-1457847.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1428348/pexels-photo-1428348.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1080696/pexels-photo-1080696.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1454804/pexels-photo-1454804.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/279746/pexels-photo-279746.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1743231/pexels-photo-1743231.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1648776/pexels-photo-1648776.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2249959/pexels-photo-2249959.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1918291/pexels-photo-1918291.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1350789/pexels-photo-1350789.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1909791/pexels-photo-1909791.jpeg?auto=compress&cs=tinysrgb&w=1600"
+    ]
+  },
+  {
+    "id": 3,
+    "titre": "Chalet de Montagne Luxueux",
+    "type": "Maison",
+    "localisation": "Chamonix, Alpes",
+    "prix": 450,
+    "description": "Superbe chalet alpin offrant une expérience montagnarde exceptionnelle. Situé à proximité des pistes de ski, ce chalet combine charme traditionnel et équipements modernes. Profitez de la cheminée, du sauna et des vues spectaculaires sur le Mont-Blanc pour un séjour à la montagne inoubliable.",
+    "caracteristiques": {
+      "chambres": 5,
+      "sallesDeBain": 4,
+      "superficie": 220,
+      "equipements": ["Wi-Fi", "Chauffage", "Cheminée", "Sauna", "Parking", "Terrasse", "Vue montagne", "Cuisine équipée", "Lave-linge", "Ski-in/ski-out", "Jacuzzi"]
+    },
+    "images": [
+      "https://images.pexels.com/photos/2102587/pexels-photo-2102587.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2227832/pexels-photo-2227832.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1571468/pexels-photo-1571468.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1457845/pexels-photo-1457845.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1648768/pexels-photo-1648768.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1571453/pexels-photo-1571453.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2251247/pexels-photo-2251247.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1834400/pexels-photo-1834400.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1669799/pexels-photo-1669799.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2227832/pexels-photo-2227832.jpeg?auto=compress&cs=tinysrgb&w=1600"
+    ]
+  },
+  {
+    "id": 4,
+    "titre": "Studio Moderne Bord de Mer",
+    "type": "Appartement",
+    "localisation": "Biarritz, Pays Basque",
+    "prix": 120,
+    "description": "Studio contemporain avec vue directe sur l'océan Atlantique. Parfait pour un couple ou un voyageur solo cherchant à profiter du surf, de la gastronomie basque et de l'ambiance décontractée de Biarritz. À quelques pas de la plage et du centre-ville.",
+    "caracteristiques": {
+      "chambres": 1,
+      "sallesDeBain": 1,
+      "superficie": 35,
+      "equipements": ["Wi-Fi", "Climatisation", "Cuisine équipée", "Vue mer", "Balcon", "TV", "Parking"]
+    },
+    "images": [
+      "https://images.pexels.com/photos/1457849/pexels-photo-1457849.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/3555615/pexels-photo-3555615.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2631746/pexels-photo-2631746.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1444424/pexels-photo-1444424.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2029667/pexels-photo-2029667.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1648769/pexels-photo-1648769.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2724749/pexels-photo-2724749.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1329711/pexels-photo-1329711.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2119714/pexels-photo-2119714.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2724748/pexels-photo-2724748.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/271816/pexels-photo-271816.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1866149/pexels-photo-1866149.jpeg?auto=compress&cs=tinysrgb&w=1600"
+    ]
+  },
+  {
+    "id": 5,
+    "titre": "Mas Provençal avec Piscine",
+    "type": "Maison",
+    "localisation": "Gordes, Provence",
+    "prix": 280,
+    "description": "Authentique mas provençal entouré de lavandes et d'oliviers. Cette maison de caractère offre le charme de la Provence avec tout le confort moderne. Idéale pour se ressourcer en famille, avec une grande piscine et un jardin magnifique. Proche des villages perchés et des marchés locaux.",
+    "caracteristiques": {
+      "chambres": 3,
+      "sallesDeBain": 2,
+      "superficie": 150,
+      "equipements": ["Wi-Fi", "Climatisation", "Piscine privée", "Parking", "Jardin", "Terrasse", "BBQ", "Cuisine équipée", "Lave-linge", "Cheminée"]
+    },
+    "images": [
+      "https://images.pexels.com/photos/259751/pexels-photo-259751.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1115804/pexels-photo-1115804.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2082090/pexels-photo-2082090.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1571471/pexels-photo-1571471.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/534151/pexels-photo-534151.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2029715/pexels-photo-2029715.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1454806/pexels-photo-1454806.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1134176/pexels-photo-1134176.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1438832/pexels-photo-1438832.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2079234/pexels-photo-2079234.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1643389/pexels-photo-1643389.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2419375/pexels-photo-2419375.jpeg?auto=compress&cs=tinysrgb&w=1600"
+    ]
+  },
+  {
+    "id": 6,
+    "titre": "Loft Industriel Design",
+    "type": "Appartement",
+    "localisation": "Lyon, Confluence",
+    "prix": 220,
+    "description": "Loft contemporain dans le quartier moderne de la Confluence. Cet espace unique combine architecture industrielle et design épuré. Hauts plafonds, grandes baies vitrées et décoration soignée en font un lieu d'exception pour un séjour urbain branché.",
+    "caracteristiques": {
+      "chambres": 2,
+      "sallesDeBain": 2,
+      "superficie": 95,
+      "equipements": ["Wi-Fi", "Climatisation", "Chauffage", "Cuisine équipée", "Lave-linge", "Parking", "Ascenseur", "TV", "Terrasse"]
+    },
+    "images": [
+      "https://images.pexels.com/photos/1571459/pexels-photo-1571459.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1648772/pexels-photo-1648772.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2079246/pexels-photo-2079246.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1109197/pexels-photo-1109197.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2988860/pexels-photo-2988860.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2343466/pexels-photo-2343466.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1329712/pexels-photo-1329712.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1668860/pexels-photo-1668860.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/3356416/pexels-photo-3356416.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2291599/pexels-photo-2291599.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/2187605/pexels-photo-2187605.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/1918291/pexels-photo-1918291.jpeg?auto=compress&cs=tinysrgb&w=1600"
+    ]
+  }
+]
