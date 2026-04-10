@@ -1,22 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import PropertyCard from '../components/PropertyCard';
-
-interface Property {
-  id: number;
-  titre: string;
-  type: string;
-  localisation: string;
-  prix: number;
-  description: string;
-  caracteristiques: {
-    chambres: number;
-    sallesDeBain: number;
-    superficie: number;
-    equipements: string[];
-  };
-  images: string[];
-}
+import { propertyService, Property } from '../lib/supabaseClient';
 
 export default function Home() {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -27,13 +12,25 @@ export default function Home() {
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    fetch('/data/properties.json')
-      .then((response) => response.json())
-      .then((data) => {
+    const loadProperties = async () => {
+      try {
+        const data = await propertyService.getAll();
         setProperties(data);
         setFilteredProperties(data);
-      })
-      .catch((error) => console.error('Erreur chargement données:', error));
+      } catch (error) {
+        console.error('Erreur chargement données:', error);
+        // Fallback: charger depuis le JSON si Supabase n'est pas disponible
+        fetch('/data/properties.json')
+          .then((response) => response.json())
+          .then((data) => {
+            setProperties(data);
+            setFilteredProperties(data);
+          })
+          .catch((err) => console.error('Erreur chargement fallback:', err));
+      }
+    };
+
+    loadProperties();
   }, []);
 
   useEffect(() => {
@@ -153,7 +150,7 @@ export default function Home() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProperties.map((property) => (
-              <PropertyCard key={property.id} {...property} />
+              <PropertyCard key={property.id || 0} {...property} id={property.id || 0} />
             ))}
           </div>
         )}

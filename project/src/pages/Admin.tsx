@@ -1,21 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Lock, Eye, EyeOff, Plus, CreditCard as Edit, Trash2, Save, X, Image as ImageIcon, AlertCircle } from 'lucide-react';
-
-interface Property {
-  id: number;
-  titre: string;
-  type: string;
-  localisation: string;
-  prix: number;
-  description: string;
-  caracteristiques: {
-    chambres: number;
-    sallesDeBain: number;
-    superficie: number;
-    equipements: string[];
-  };
-  images: string[];
-}
+import { Lock, Eye, EyeOff, Plus, CreditCard as Edit, Trash2, Save, X, Image as ImageIcon, AlertCircle, Check, Loader } from 'lucide-react';
+import { propertyService, Property } from '../lib/supabaseClient';
 
 const ADMIN_PASSWORD = 'admin123';
 
@@ -24,6 +9,8 @@ export default function Admin() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
   const [properties, setProperties] = useState<Property[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState<Property | null>(null);
@@ -35,11 +22,16 @@ export default function Admin() {
     }
   }, [isAuthenticated]);
 
-  const loadProperties = () => {
-    fetch('/data/properties.json')
-      .then((response) => response.json())
-      .then((data) => setProperties(data))
-      .catch((error) => console.error('Erreur chargement données:', error));
+  const loadProperties = async () => {
+    try {
+      setLoading(true);
+      const data = await propertyService.getAll();
+      setProperties(data);
+    } catch (err) {
+      setError('Erreur lors du chargement des propriétés: ' + (err instanceof Error ? err.message : 'Erreur inconnue'));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLogin = (e: React.FormEvent) => {
@@ -53,27 +45,77 @@ export default function Admin() {
   };
 
   const handleEdit = (property: Property) => {
-    setEditingId(property.id);
+    setEditingId(property.id !== undefined ? property.id : null);
     setEditForm({ ...property });
   };
 
-  const handleSave = () => {
-    if (editForm) {
-      setProperties(properties.map(p => p.id === editForm.id ? editForm : p));
+  const handleSave = async () => {
+    if (!editForm || !editForm.titre || !editForm.localisation || editForm.images.length === 0) {
+      setError('Veuillez remplir tous les champs obligatoires');
+      setTimeout(() => setError(''), 3000);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      if (editForm.id) {
+        // Mise à jour
+        await propertyService.update(editForm.id, {
+          titre: editForm.titre,
+          type: editForm.type,
+          localisation: editForm.localisation,
+          prix: editForm.prix,
+          description: editForm.description,
+          caracteristiques: editForm.caracteristiques,
+          images: editForm.images,
+        });
+        setProperties(properties.map(p => p.id === editForm.id ? editForm : p));
+        setSuccess('Propriété mise à jour avec succès!');
+      } else {
+        // Nouvelle propriété
+        const newProperty = await propertyService.create({
+          titre: editForm.titre,
+          type: editForm.type,
+          localisation: editForm.localisation,
+          prix: editForm.prix,
+          description: editForm.description,
+          caracteristiques: editForm.caracteristiques,
+          images: editForm.images,
+        });
+        setProperties([...properties, newProperty]);
+        setShowAddForm(false);
+        setSuccess('Propriété ajoutée avec succès!');
+      }
       setEditingId(null);
       setEditForm(null);
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      setError('Erreur lors de la sauvegarde: ' + (err instanceof Error ? err.message : 'Erreur inconnue'));
+      setTimeout(() => setError(''), 5000);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cette propriété ?')) {
-      setProperties(properties.filter(p => p.id !== id));
+      try {
+        setLoading(true);
+        await propertyService.delete(id);
+        setProperties(properties.filter(p => p.id !== id));
+        setSuccess('Propriété supprimée avec succès!');
+        setTimeout(() => setSuccess(''), 3000);
+      } catch (err) {
+        setError('Erreur lors de la suppression: ' + (err instanceof Error ? err.message : 'Erreur inconnue'));
+        setTimeout(() => setError(''), 5000);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   const handleAddNew = () => {
     const newProperty: Property = {
-      id: Math.max(...properties.map(p => p.id)) + 1,
       titre: '',
       type: 'Maison',
       localisation: '',
@@ -91,22 +133,8 @@ export default function Admin() {
     setShowAddForm(true);
   };
 
-  const handleSaveNew = () => {
-    if (editForm && editForm.titre && editForm.localisation && editForm.images.length > 0) {
-      setProperties([...properties, editForm]);
-      setShowAddForm(false);
-      setEditForm(null);
-    }
-  };
-
-  const downloadJSON = () => {
-    const dataStr = JSON.stringify(properties, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-    const exportFileDefaultName = 'properties.json';
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
+  const handleSaveNew = async () => {
+    await handleSave();
   };
 
   if (!isAuthenticated) {
@@ -183,33 +211,58 @@ export default function Admin() {
             <div className="flex space-x-3 mt-4 md:mt-0">
               <button
                 onClick={handleAddNew}
-                className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                disabled={loading}
+                className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
               >
                 <Plus className="h-5 w-5" />
                 <span>Ajouter</span>
               </button>
               <button
-                onClick={downloadJSON}
-                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                onClick={loadProperties}
+                disabled={loading}
+                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
               >
-                <Save className="h-5 w-5" />
-                <span>Télécharger JSON</span>
+                {loading ? <Loader className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
+                <span>Rafraîchir</span>
               </button>
               <button
                 onClick={() => setIsAuthenticated(false)}
-                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                disabled={loading}
+                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50"
               >
                 Déconnexion
               </button>
             </div>
           </div>
 
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <div className="flex items-start space-x-3">
+                <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <div className="text-sm text-red-800">
+                  <p className="font-medium">{error}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {success && (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+              <div className="flex items-start space-x-3">
+                <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                <div className="text-sm text-green-800">
+                  <p className="font-medium">{success}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
             <div className="flex items-start space-x-3">
-              <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-              <div className="text-sm text-yellow-800">
-                <p className="font-medium mb-1">Mode simulation - Données locales</p>
-                <p>Les modifications ne sont pas persistantes. Pour sauvegarder vos changements, téléchargez le fichier JSON et remplacez manuellement le fichier dans <code className="bg-yellow-100 px-1 rounded">/public/data/properties.json</code></p>
+              <Check className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+              <div className="text-sm text-blue-800">
+                <p className="font-medium mb-1">✓ Connexion à la base de données active</p>
+                <p>Les modifications sont automatiquement sauvegardées dans Supabase. Vos changements seront visibles immédiatement sur le site.</p>
               </div>
             </div>
           </div>
@@ -310,16 +363,19 @@ export default function Admin() {
                   <div className="flex space-x-3">
                     <button
                       onClick={handleSave}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                      disabled={loading}
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 flex items-center space-x-2"
                     >
-                      Sauvegarder
+                      {loading ? <Loader className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
+                      <span>Sauvegarder</span>
                     </button>
                     <button
                       onClick={() => {
                         setEditingId(null);
                         setEditForm(null);
                       }}
-                      className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                      disabled={loading}
+                      className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50"
                     >
                       Annuler
                     </button>
@@ -348,7 +404,7 @@ export default function Admin() {
                           <Edit className="h-5 w-5" />
                         </button>
                         <button
-                          onClick={() => handleDelete(property.id)}
+                          onClick={() => handleDelete(property.id || 0)}
                           className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
                         >
                           <Trash2 className="h-5 w-5" />
@@ -503,16 +559,19 @@ export default function Admin() {
                 <div className="flex space-x-3 pt-4">
                   <button
                     onClick={handleSaveNew}
-                    className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    disabled={loading}
+                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 flex items-center space-x-2"
                   >
-                    Créer la propriété
+                    {loading ? <Loader className="h-5 w-5 animate-spin" /> : <Check className="h-5 w-5" />}
+                    <span>Créer la propriété</span>
                   </button>
                   <button
                     onClick={() => {
                       setShowAddForm(false);
                       setEditForm(null);
                     }}
-                    className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                    disabled={loading}
+                    className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50"
                   >
                     Annuler
                   </button>

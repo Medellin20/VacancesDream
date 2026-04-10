@@ -4,22 +4,7 @@ import { MapPin, Bed, Bath, Square, Wifi, Wind, Waves, Car, Trees, Home as HomeI
 import BookingModal from '../components/BookingModal';
 import ContactAgentModal from '../components/ContactAgentModal';
 import ContactFab from '../components/ContactFab';
-
-interface Property {
-  id: number;
-  titre: string;
-  type: string;
-  localisation: string;
-  prix: number;
-  description: string;
-  caracteristiques: {
-    chambres: number;
-    sallesDeBain: number;
-    superficie: number;
-    equipements: string[];
-  };
-  images: string[];
-}
+import { propertyService, Property } from '../lib/supabaseClient';
 
 const equipmentIcons: { [key: string]: React.ReactNode } = {
   'Wi-Fi': <Wifi className="h-5 w-5" />,
@@ -40,17 +25,36 @@ export default function PropertyDetail() {
   const [showContactModal, setShowContactModal] = useState(false);
 
   useEffect(() => {
-    fetch('/data/properties.json')
-      .then((response) => response.json())
-      .then((data: Property[]) => {
+    const loadProperty = async () => {
+      try {
+        const data = await propertyService.getAll();
         const foundProperty = data.find((p) => p.id === Number(id));
         if (foundProperty) {
           setProperty(foundProperty);
         } else {
           navigate('/');
         }
-      })
-      .catch((error) => console.error('Erreur chargement données:', error));
+      } catch (error) {
+        console.error('Erreur chargement données:', error);
+        // Fallback: charger depuis le JSON si Supabase n'est pas disponible
+        fetch('/data/properties.json')
+          .then((response) => response.json())
+          .then((data: Property[]) => {
+            const foundProperty = data.find((p) => p.id === Number(id));
+            if (foundProperty) {
+              setProperty(foundProperty);
+            } else {
+              navigate('/');
+            }
+          })
+          .catch((err) => {
+            console.error('Erreur chargement fallback:', err);
+            navigate('/');
+          });
+      }
+    };
+
+    loadProperty();
   }, [id, navigate]);
 
   if (!property) {
@@ -271,7 +275,7 @@ export default function PropertyDetail() {
         onClose={() => setShowBookingModal(false)}
         propertyTitle={property.titre}
         propertyPrice={property.prix}
-        propertyId={property.id}
+        propertyId={property.id || 0}
         propertyType={property.type}
         bedrooms={property.caracteristiques.chambres}
       />
@@ -280,7 +284,7 @@ export default function PropertyDetail() {
         isOpen={showContactModal}
         onClose={() => setShowContactModal(false)}
         propertyTitle={property.titre}
-        propertyId={property.id}
+        propertyId={property.id || 0}
       />
       <ContactFab onOpen={() => setShowContactModal(true)} />
     </div>
