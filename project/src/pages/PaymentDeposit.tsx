@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader, Mail, Phone, User } from 'lucide-react';
+import { addBooking } from '../lib/bookingStorage';
 
 type PaymentDraft = {
   propertyId: number;
@@ -102,31 +103,49 @@ export default function PaymentDeposit() {
 
     try {
       const payload = {
-        ...draft,
+        propertyId: draft.propertyId,
+        propertyTitle: draft.propertyTitle,
+        propertyPrice: draft.propertyPrice,
+        propertyType: draft.propertyType,
+        checkInDate: draft.checkInDate,
+        checkOutDate: draft.checkOutDate,
+        nights: draft.nights,
+        guests: draft.guests,
+        totalPrice: draft.totalPrice,
+        accompteAmount: draft.accompteAmount,
+        cautionAmount: draft.cautionAmount,
         guestName: trimmedName,
         guestEmail: trimmedEmail,
         guestPhone: trimmedPhone,
       };
 
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout-session`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const apiEndpoint = import.meta.env.VITE_API_BASE_URL
+        ? `${import.meta.env.VITE_API_BASE_URL}/api/send-booking`
+        : '/api/send-booking';
 
-      if (!response.ok) throw new Error('Erreur lors de la préparation du paiement');
+      const response = await fetch(apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
 
-      const data = (await response.json()) as { url?: string };
-      if (!data.url) throw new Error('URL de paiement introuvable');
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        const message = data?.error || 'Impossible d\'envoyer l\'email de réservation.';
+        throw new Error(message);
+      }
 
-      // Redirection vers Stripe Checkout (pas de popup pour éviter les blocages navigateur).
-      window.location.href = data.url;
+      const booking = addBooking({
+        ...payload,
+        amountPaid: draft.accompteAmount,
+        paymentStatus: 'paid',
+        checkoutSessionId: `local-${crypto.randomUUID()}`,
+      });
+
+      localStorage.removeItem('vacancesdream_payment_draft');
+      navigate(`/paiement/success?bookingId=${booking.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors du paiement. Veuillez réessayer.');
     } finally {

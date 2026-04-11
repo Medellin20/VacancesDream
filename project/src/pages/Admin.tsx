@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Lock, Eye, EyeOff, Plus, CreditCard as Edit, Trash2, Save, X, Image as ImageIcon, AlertCircle, Check, Loader } from 'lucide-react';
-import { propertyService, Property } from '../lib/supabaseClient';
+import { useState, useEffect, useRef } from 'react';
+import { Lock, Eye, EyeOff, Plus, CreditCard as Edit, Trash2, Save, X, Image as ImageIcon, AlertCircle, Check, Loader, UploadCloud } from 'lucide-react';
+import { propertyService, Property } from '../lib/propertyService';
 
-const ADMIN_PASSWORD = 'admin123';
+const ADMIN_PASSWORD = 'Hublot1233';
 
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -15,6 +15,8 @@ export default function Admin() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState<Property | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [uploadingImages, setUploadingImages] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -41,6 +43,45 @@ export default function Admin() {
       setError('');
     } else {
       setError('Mot de passe incorrect');
+    }
+  };
+
+  const handleUploadClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleImageFilesSelected = async (files: FileList | null) => {
+    if (!files || files.length === 0 || !editForm) {
+      return;
+    }
+
+    setUploadingImages(true);
+    try {
+      const uploadedUrls: string[] = [];
+
+      for (const file of Array.from(files)) {
+        const reader = new FileReader();
+        const dataUrl = await new Promise<string>((resolve, reject) => {
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = () => reject(new Error('Impossible de lire le fichier image'));
+          reader.readAsDataURL(file);
+        });
+        uploadedUrls.push(dataUrl);
+      }
+
+      setEditForm({
+        ...editForm,
+        images: [...editForm.images, ...uploadedUrls],
+      });
+      setSuccess(`${uploadedUrls.length} image(s) ajoutée(s)`);
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      setError('Erreur upload image: ' + (err instanceof Error ? err.message : 'Erreur inconnue'));
+      setTimeout(() => setError(''), 5000);
+    } finally {
+      setUploadingImages(false);
     }
   };
 
@@ -186,12 +227,6 @@ export default function Admin() {
               >
                 Se connecter
               </button>
-
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-sm text-blue-800">
-                  <strong>Mot de passe:</strong> admin123
-                </p>
-              </div>
             </form>
           </div>
         </div>
@@ -261,8 +296,8 @@ export default function Admin() {
             <div className="flex items-start space-x-3">
               <Check className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-blue-800">
-                <p className="font-medium mb-1">✓ Connexion à la base de données active</p>
-                <p>Les modifications sont automatiquement sauvegardées dans Supabase. Vos changements seront visibles immédiatement sur le site.</p>
+                <p className="font-medium mb-1">✓ Sauvegarde locale active</p>
+                <p>Les modifications sont enregistrées dans le navigateur et restent visibles immédiatement dans l'application.</p>
               </div>
             </div>
           </div>
@@ -507,6 +542,40 @@ export default function Admin() {
                   />
                 </div>
 
+                <div className="space-y-3">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="hidden"
+                    onChange={(e) => {
+                      handleImageFilesSelected(e.target.files);
+                      if (e.target) e.target.value = '';
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleUploadClick}
+                    disabled={uploadingImages || loading}
+                    className="inline-flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                  >
+                    {uploadingImages ? (
+                      <Loader className="h-5 w-5 animate-spin" />
+                    ) : (
+                      <UploadCloud className="h-5 w-5" />
+                    )}
+                    <span>Télécharger des images</span>
+                  </button>
+                  {editForm.images.length > 0 && (
+                    <div className="grid grid-cols-3 gap-2">
+                      {editForm.images.slice(-6).map((image, index) => (
+                        <img key={index} src={image} alt={`Aperçu ${index + 1}`} className="h-24 w-full object-cover rounded-lg border border-gray-200" />
+                      ))}
+                    </div>
+                  )}
+                </div>
+
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Chambres</label>
@@ -551,7 +620,7 @@ export default function Admin() {
                     <ImageIcon className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
                     <div className="text-sm text-blue-800">
                       <p className="font-medium mb-1">Instructions pour les images</p>
-                      <p>Ajoutez manuellement au moins 12 images dans le fichier JSON téléchargé. Vous pouvez utiliser des URLs d'images Pexels ou stocker les images localement dans <code className="bg-blue-100 px-1 rounded">/public/properties/nom-du-bien/</code></p>
+                      <p>Utilisez le bouton ci-dessus pour charger des images depuis votre ordinateur. Les images sont stockées localement dans le navigateur et ajoutées automatiquement à l'annonce.</p>
                     </div>
                   </div>
                 </div>

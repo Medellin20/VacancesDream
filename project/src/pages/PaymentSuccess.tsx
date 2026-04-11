@@ -1,69 +1,28 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { CheckCircle2, Loader } from 'lucide-react';
-import { addBooking, type StoredBooking } from '../lib/bookingStorage';
-
-type SendEmailResponse = {
-  success?: boolean;
-  booking?: Omit<StoredBooking, 'id' | 'createdAt'> & { id?: string; createdAt?: string };
-};
+import { getBookings, type StoredBooking } from '../lib/bookingStorage';
 
 export default function PaymentSuccess() {
   const [searchParams] = useSearchParams();
-  const sessionId = searchParams.get('session_id') || '';
+  const bookingId = searchParams.get('bookingId') || '';
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [booking, setBookingState] = useState<StoredBooking | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
+    const booking = bookingId ? getBookings().find((b) => b.id === bookingId) : null;
 
-    async function run() {
-      if (!sessionId) {
-        setLoading(false);
-        setError('Session de paiement introuvable.');
-        return;
-      }
-
-      setLoading(true);
-      setError('');
-
-      try {
-        const res = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-booking-email`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            },
-            body: JSON.stringify({ checkoutSessionId: sessionId }),
-          }
-        );
-
-        if (!res.ok) throw new Error('Erreur lors de la confirmation du paiement');
-
-        const data = (await res.json()) as SendEmailResponse;
-        if (!data.success || !data.booking) throw new Error('Impossible d’obtenir les détails');
-
-        if (cancelled) return;
-
-        const stored = addBooking(data.booking);
-        setBookingState(stored);
-      } catch (e) {
-        if (cancelled) return;
-        setError(e instanceof Error ? e.message : 'Erreur inconnue');
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
+    if (!booking) {
+      setError('Réservation introuvable.');
+      setLoading(false);
+      return;
     }
 
-    run();
-    return () => {
-      cancelled = true;
-    };
-  }, [sessionId]);
+    setBookingState(booking);
+    setLoading(false);
+  }, [bookingId]);
 
   if (loading) {
     return (

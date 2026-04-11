@@ -19,6 +19,9 @@ OU plus simple:
 3. Allez à https://app.supabase.com/ → SQL Editor
 4. Collez et exécutez
 
+> Si vous utilisez l’upload d’images depuis l’admin, créez aussi un bucket Supabase Storage public nommé `property-images`.
+> Vous pouvez aussi définir `VITE_SUPABASE_STORAGE_BUCKET` dans votre fichier `.env` si vous voulez un autre nom de bucket.
+
 ### 2️⃣ Démarrer l'app
 
 ```bash

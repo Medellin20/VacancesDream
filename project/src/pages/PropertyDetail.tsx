@@ -4,7 +4,7 @@ import { MapPin, Bed, Bath, Square, Wifi, Wind, Waves, Car, Trees, Home as HomeI
 import BookingModal from '../components/BookingModal';
 import ContactAgentModal from '../components/ContactAgentModal';
 import ContactFab from '../components/ContactFab';
-import { propertyService, Property } from '../lib/supabaseClient';
+import { propertyService, Property } from '../lib/propertyService';
 
 const equipmentIcons: { [key: string]: React.ReactNode } = {
   'Wi-Fi': <Wifi className="h-5 w-5" />,
@@ -36,7 +36,7 @@ export default function PropertyDetail() {
         }
       } catch (error) {
         console.error('Erreur chargement données:', error);
-        // Fallback: charger depuis le JSON si Supabase n'est pas disponible
+        // Fallback: charger depuis le fichier local si le service de propriétés est indisponible
         fetch('/data/properties.json')
           .then((response) => response.json())
           .then((data: Property[]) => {

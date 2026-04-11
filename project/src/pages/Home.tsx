@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import PropertyCard from '../components/PropertyCard';
-import { propertyService, Property } from '../lib/supabaseClient';
+import { propertyService, Property } from '../lib/propertyService';
 
 export default function Home() {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -19,7 +19,7 @@ export default function Home() {
         setFilteredProperties(data);
       } catch (error) {
         console.error('Erreur chargement données:', error);
-        // Fallback: charger depuis le JSON si Supabase n'est pas disponible
+        // Fallback: charger depuis le fichier local si le service de propriétés est indisponible
         fetch('/data/properties.json')
           .then((response) => response.json())
           .then((data) => {

@@ -37,6 +37,16 @@ Sélectionnez tout et copiez (Ctrl+A, Ctrl+C)
 2. Vous devriez voir une table nommée **`properties`**
 3. ✅ C'est bon!
 
+### Configuration du Storage d'images
+
+Si vous souhaitez uploader des images depuis l'admin, créez également un bucket Supabase Storage avec le nom `property-images`.
+
+Si vous utilisez un nom différent, ajoutez cette variable à votre fichier `.env`:
+
+```env
+VITE_SUPABASE_STORAGE_BUCKET=mon-bucket-images
+```
+
 ## 🚀 Utiliser l'App
 
 ### Démarrer
